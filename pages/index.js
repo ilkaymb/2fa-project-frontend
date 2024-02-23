@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const router = useRouter();
 
   const [cookies, setCookie, removeCookie] = useCookies(["STEP1_TOKEN"]); // userToken adında bir cookie yönetmek istiyorsunuz
@@ -22,6 +22,7 @@ export default function Home() {
   // Form submit fonksiyonu
   const handleSubmit = async () => {
     try {
+      setButtonDisabled(true);
       // Axios POST isteği ile login endpoint'ine kullanıcı bilgilerini gönder
       const response = await axios.post(
         "http://localhost:3001/api/auth/login",
@@ -41,6 +42,7 @@ export default function Home() {
     } catch (error) {
       // Hata yakalama
       alert(error.response ? error.response.data.message : error.message);
+      setButtonDisabled(false);
     }
   };
 
@@ -94,6 +96,7 @@ export default function Home() {
                 </Link>
               </div>
               <button
+                disabled={buttonDisabled}
                 onClick={handleSubmit} //
                 className="w-full mb-4 text-[18px] mt-6 rounded-lg bg-white text-indigo-900 hover:bg-indigo-600 hover:text-white py-2 transition-colors duration-300"
                 type="button"
