@@ -1,16 +1,15 @@
 import { Inter } from "next/font/google";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 const inter = Inter({ subsets: ["latin"] });
 import { useCookies } from "react-cookie";
-import PrivateRoute from "@/components/PrivateRoute";
+import Step1PrivateRoute from "@/components/Step1PrivateRoute";
 
 export default function Home() {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState(""); // Hata mesajları için durum
-  const [isVerified, setIsVerified] = useState(false); // Doğrulama durumu
 
   const router = useRouter();
 
@@ -18,6 +17,14 @@ export default function Home() {
     "STEP1_TOKEN",
     "STEP2_TOKEN",
   ]); // userToken adında bir cookie yönetmek istiyorsunuz
+  useEffect(() => {
+    if (!cookies.STEP1_TOKEN) {
+      router.push("/");
+    }
+    if (cookies.STEP2_TOKEN) {
+      router.push("/");
+    }
+  }, [cookies, router]);
 
   const verifyOTP = async (e) => {
     try {
@@ -29,31 +36,22 @@ export default function Home() {
           STEP1_TOKEN: cookies.STEP1_TOKEN,
         }
       );
-
-      // OTP doğrulandı
-      setIsVerified(true);
-
-      alert(response.data.message);
       let token = response.data.token;
-      console.log(token);
-      setCookie("STEP2_TOKEN", token, { path: "/", maxAge: 3600 }); // Cookie olarak kaydet
-      removeCookie("STEP1_TOKEN");
-      setError(""); // Hata mesajını temizle
-      router.push("/profile");
 
-      // Kullanıcıyı başka bir sayfaya yönlendirme işlemi burada yapılabilir
-      // Örneğin: history.push('/dashboard');
+      setCookie("STEP2_TOKEN", token, { path: "/", maxAge: 3600 }); // Cookie olarak kaydet
+
+      removeCookie("STEP1_TOKEN");
+      alert(response.data.message);
+
+      router.push("/profile");
     } catch (error) {
-      // Axios, 2xx dışı durum kodlarını otomatik olarak hata olarak yakalar
       setError("OTP is incorrect. Please try again."); // Hata mesajını güncelle
-      setIsVerified(false); // Doğrulama durumunu güncelle
     }
   };
 
   return (
-    <main className={`${inter.className}`}>
-      {" "}
-      <PrivateRoute tokenName="STEP1_TOKEN">
+    <Step1PrivateRoute>
+      <main className={`${inter.className}`}>
         <div className="bg-indigo-950 text-white h-[100vh] flex justify-center items-center">
           <div className="bg-indigo-900 border border-indigo-600 rounded-md px-6 py-8 shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 relative transition-all duration-200">
             <form className="otp-form w-full sm:w-[300px] md:w-[300px] lg:w-[300px]">
@@ -84,8 +82,8 @@ export default function Home() {
               {error && <p className="error-msg">{error}</p>}
             </form>
           </div>
-        </div>{" "}
-      </PrivateRoute>
-    </main>
+        </div>
+      </main>
+    </Step1PrivateRoute>
   );
 }
