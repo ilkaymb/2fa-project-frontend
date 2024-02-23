@@ -84,7 +84,7 @@ const Header = () => {
                 <button
                   type="button"
                   onClick={logout}
-                  className={`text-base mx-4 font-medium text-white hover:bg-red-500 border hover:text-white hover:border-white bg-white text-indigo-500  px-4 py-2 text-center rounded-full transition duration-300`}
+                  className={`text-base mx-4 font-medium  hover:bg-red-500 border hover:text-white hover:border-white bg-white text-indigo-500  px-4 py-2 text-center rounded-full transition duration-300`}
                 >
                   Log Out
                 </button>
