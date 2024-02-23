@@ -1,13 +1,13 @@
 import React from "react";
 import { Inter } from "next/font/google";
-import PrivateRoute from "@/components/PrivateRoute";
+import Step2PrivateRoute from "@/components/Step2PrivateRoute";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function index() {
   return (
-    <PrivateRoute tokenName="STEP2_TOKEN">
+    <Step2PrivateRoute>
       <Header />
       <main className={`${inter.className}`}>
         <div className="bg-indigo-950 text-white h-[100vh] flex justify-center items-center">
@@ -19,6 +19,6 @@ export default function index() {
         </div>
       </main>
       <Footer />
-    </PrivateRoute>
+    </Step2PrivateRoute>
   );
 }
