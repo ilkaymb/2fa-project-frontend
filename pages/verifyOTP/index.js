@@ -8,14 +8,13 @@ import { useCookies } from "react-cookie";
 
 export default function Home() {
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState(""); // Hata mesajları için durum
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const [cookies, setCookie, removeCookie] = useCookies([
     "STEP1_TOKEN",
     "STEP2_TOKEN",
-  ]); // userToken adında bir cookie yönetmek istiyorsunuz
-
+  ]);
   const verifyOTP = async (e) => {
     try {
       console.log(cookies);
